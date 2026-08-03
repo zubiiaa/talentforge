@@ -1,70 +1,73 @@
-# Getting Started with Create React App
+# TalentForge
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A LinkedIn-style job platform I built to go past the usual CRUD demo — real auth, file uploads, search, a job board, a social feed, an analytics dashboard, and a resume builder that exports to PDF.
 
-## Available Scripts
+It started as a static Create React App page and got rebuilt from scratch on Next.js.
 
-In the project directory, you can run:
+> Live: _add your Vercel URL here_
+> Try it without signing up — there's an "Explore as guest" option on the login page (job-seeker or employer).
 
-### `npm start`
+## What's in it
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Auth** — email/password with Auth.js (JWT in an httpOnly cookie), route protection via middleware, register / login / logout.
+- **Profiles** — headline, bio, skills, and full experience/education, plus avatar, cover, and resume uploads.
+- **Feed** — post text and images, like, comment, delete your own posts.
+- **Jobs** — employers post roles; seekers search, filter, paginate, save, and apply. Applications are stored per user.
+- **Dashboard** — profile views, posts, applications and saved jobs, with charts and a full application history.
+- **Resume builder** — keep several resumes, edit them in a split-screen editor with a live preview, and download each as a branded PDF.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Stack
 
-### `npm test`
+Next.js 15 (App Router) + TypeScript, Tailwind + shadcn/ui, Auth.js v5, MongoDB/Mongoose, Vercel Blob for uploads, react-hook-form + Zod, Recharts, and @react-pdf/renderer.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Running it locally
 
-### `npm run build`
+You'll need Node 20+ and a MongoDB connection string (Atlas free tier is fine).
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+```bash
+npm install
+cp .env.example .env.local   # fill in the three values below
+npm run seed                 # optional — loads some demo users, jobs and posts
+npm run dev
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+`.env.local`:
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+| Variable | What it's for |
+| --- | --- |
+| `MONGODB_URI` | Your MongoDB connection string |
+| `AUTH_SECRET` | Auth.js signing secret — run `npx auth secret` to generate one |
+| `BLOB_READ_WRITE_TOKEN` | Vercel Blob token for uploads (optional locally) |
 
-### `npm run eject`
+If you don't set a Blob token, uploads just get written to `public/uploads` so local dev works out of the box. On Vercel you need the token, because the filesystem there is read-only.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Deploying
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+Push to GitHub and import the repo into Vercel. `.env.local` is gitignored on purpose, so add the same variables under the project's Environment Variables settings. Add Vercel Blob from the Storage tab and it wires up `BLOB_READ_WRITE_TOKEN` for you.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## A note on the folder layout
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
+src/
+  app/
+    (auth)/      login, register
+    (app)/       feed, jobs, profile, dashboard, resume, settings
+    api/         auth + resume-PDF endpoints
+  components/    ui primitives + feature components
+  data/          read queries (users, jobs, posts, dashboard, resumes)
+  server/actions/ writes (auth, profile, jobs, posts, resumes)
+  models/        Mongoose schemas
+  lib/           auth, db, session, uploads, validation
+scripts/seed.ts  demo data
+```
 
-## Learn More
+Reads and writes are kept apart — `data/` only queries, `server/actions/` only mutates — so it's easy to follow where state changes.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Scripts
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+| Command | Does |
+| --- | --- |
+| `npm run dev` | Dev server |
+| `npm run build` | Production build |
+| `npm run seed` | Load demo data |
+| `npm run lint` | Lint |
