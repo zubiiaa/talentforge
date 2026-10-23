@@ -7,6 +7,17 @@ It started as a static Create React App page and got rebuilt from scratch on Nex
 > Live: https://web-talentforge.vercel.app/
 > Try it without signing up — there's an "Explore as guest" option on the login page (job-seeker or employer).
 
+## Screenshots 
+
+**1. Landing Page**
+![Talentforge landing page](public/images/talentforge.webp)
+
+**2. Resume Builder**
+![Talentforge resume builder](public/images/talentforge-resume.webp)
+
+**3. Job Board**
+![Talentforge job board](public/images/talentforge-jobs.webp)
+
 ## What's in it
 
 - **Auth** — email/password with Auth.js (JWT in an httpOnly cookie), route protection via middleware, register / login / logout.
