@@ -4,7 +4,7 @@ A LinkedIn-style job platform I built to go past the usual CRUD demo — real au
 
 It started as a static Create React App page and got rebuilt from scratch on Next.js.
 
-> Live: _add your Vercel URL here_
+> Live: https://web-talentforge.vercel.app/
 > Try it without signing up — there's an "Explore as guest" option on the login page (job-seeker or employer).
 
 ## What's in it
